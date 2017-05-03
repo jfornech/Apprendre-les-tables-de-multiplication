@@ -12,6 +12,50 @@ import inspect, os
 import threading
 
 
+class Statistiques():
+    '''
+    Format du fichier cvs
+    +----------------------------------------------------------------------+
+    + ['1', '10', '2', '3', '4', '5', '6', '7', '8', '9', 'date', 'table'] +
+    +----------------------------------------------------------------------+
+    '''
+
+    def __init__(self):
+        self.file = "stats.cvs"
+        self.list_stat = ["date", "questionq", "fautes", "q1", "q2", "q3", "q3", "q4", "q5", "q6", "q7", "q8", "q9",
+                          "q10"]
+        self.dico_stat = {}
+        for clef in range(0, len(self.list_stat)):
+            self.dico_stat[self.list_stat[clef]] = ""
+
+    def open(self):
+        input_file = open(self.file, "r")
+        t = input_file.read()
+        a = t.split("\n")
+        dico_outout = {}
+        for b in range(0, len(a)):
+            tableau = a[b].split(';')
+            cle = tableau[0]
+            valeur = tableau[1]
+            dico_outout[cle] = valeur
+        return (dico_outout)
+
+    def get_values(self, clef, value):
+        for i in range(0, len(self.list_stat)):
+            if clef == self.list_stat[i]:
+                self.dico_stat[self.list_stat[i]] = value
+
+    def update(self):
+        self.write(dico=self.dico_stat)
+
+    def write(self, dico):
+        output = open(self.file, 'a')
+        dico['date'] = time.strftime("%Y-%m-%d %H:%M:%S")
+
+        for cle, valeur in sorted(dico.items()):
+            output.write("'{}';".format(valeur))
+        output.write("\n")
+
 class TimerWindow:
     def __init__(self):
         self.start()
@@ -32,7 +76,7 @@ class TimerWindow:
     def update(self, starttime, totaltime, entry):
         value = totaltime - (time.time() - starttime)
         ecart = 100 / (totaltime * 1000)
-        print(ecart)
+        # print(ecart)
         v1 = entry.get_fraction()
         entry.set_fraction(v1 + ecart)
 
@@ -165,10 +209,11 @@ class Multiplication(Gtk.Window):
 
         self.list_reponse = []
         self.list_reponse_fausse = []
-        self.list_multiplicateur = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        self.list_multiplicateur = [2, 3, 4, 5, 6, 7, 8, 9, 10, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        # self.list_multiplicateur = [2]
 
-        self.dico_reponse = {'0': [], '1': [], '2': [], '3': [], '4': [], '5': [], '6': [], '7': [], '8': [], '9': [],
-                             '10': []}
+        self.dico_reponse = {"date": 0, "table": 0, "0": 0, "1": 0, "2": 0, "3": 0, "4": 0, "5": 0, "6": 0,
+                             "7": 0, "8": 0, "9": 0, "10": 0}
 
         self.list_test_table = ['1']  # Choix de la table sélectionnée
         # question_en_cours= []
@@ -292,19 +337,12 @@ class Multiplication(Gtk.Window):
         self.q_image2.set_from_pixbuf(self.imgb)
 
     def reponse(self, table, multiplicateur, reponse):
+        # TODO : fonction réponse pourra être supprimée
         m = int(multiplicateur)
         t = int(table)
         r = int(reponse)
-        original_list = self.dico_reponse.get(m)
-        new_list = []
-        if original_list is None:
-            new_list.append(self.verification(table=int(t), multiplicateur=int(m), reponse=int(r)))
-            self.dico_reponse[str(m)] = new_list
-        else:
-            for item in original_list:
-                new_list.append(item)
-                new_list.append(self.verification(table=int(t), multiplicateur=int(m), reponse=int(r)))
-            self.dico_reponse[str(m)] = new_list
+
+        self.verification(table=int(t), multiplicateur=int(m), reponse=int(r))
 
     def date_heure(self):
         a = strftime("%Y-%m-%d %H:%M:%S", gmtime())
@@ -318,10 +356,6 @@ class Multiplication(Gtk.Window):
         self.label_table_titre.set_markup("<big><big>Table de " + str(t) + "</big></big>")
         for a in range(0, 11):
             b = int(t) * a
-
-            # exec('global label_table_multiplicateur_' + str(a))
-            # exec('global label_table_' + str(a))
-            # exec('global label_resultat_' + str(a))
             exec('self.label_table_multiplicateur_' + str(a) + '.set_markup("<big><b>{}</b></big>".format(' + str(
                 a) + '))')
             exec('self.label_table_' + str(a) + '.set_markup("<big><b>{}</b></big>".format(' + str(t) + '))')
@@ -337,13 +371,10 @@ class Multiplication(Gtk.Window):
         return result
 
     def verification(self, table, multiplicateur, reponse):
-        # print(str(table) + " x " + str(multiplicateur) + " = " + str(reponse))
         if table * multiplicateur == reponse:
             self.label1.set_text("OK")
             self.reponse_juste += 1
             self.list_multiplicateur.pop()
-            # print("Juste")
-            #print(self.list_multiplicateur)
             random.shuffle(self.list_multiplicateur)  # mélange la liste
             return "OK"
 
@@ -353,16 +384,17 @@ class Multiplication(Gtk.Window):
                 "<big>Attention : {} x {} = <b>{}</b></big>".format(table, multiplicateur, self.bonne_reponse))
             self.list_reponse_fausse.append(multiplicateur)
 
-            # incrémente le compteur des réponses fausses
+            # incrémente les compteur des réponses
             self.reponse_fausse += 1
-
-            # Reactive le multiplicateur en cas de faute
-            self.list_multiplicateur.append(multiplicateur)
             self.question_posee -= 1
 
-            #print(self.list_multiplicateur)
+            # Mets à jour la liste et ajoute la reponse fause aux questions à reposer
+            self.list_multiplicateur.append(multiplicateur)
             random.shuffle(self.list_multiplicateur)  # mélange la liste
-            #print("Faux")
+
+            # Mets à jour le dicotionnaire avant enregistrement
+            self.dico_reponse[str(multiplicateur)] += 1
+
             return "Faux"
 
     def reponse_temps_ecoule(self):
@@ -437,29 +469,20 @@ class Multiplication(Gtk.Window):
             return False
 
     def questionnaire(self, table):
+        self.dico_reponse["table"] = table
 
         self.nombre_de_question = len(self.list_multiplicateur)
-        # self.label2.set_text( "Erreurs : " + str(len(self.list_reponse_fausse)) + "    " + str(self.compteur_question) + "/" + str(self.nombre_de_question))
 
         # Pose une série de questions
-        # if self.compteur_question < self.nombre_de_question:
         if len(self.list_multiplicateur) > 0:
             self.question(table, self.multiplicateur())
             # self.compteur_question += 1
-
-        # Travail des erreurs
-
-        # elif int(len(self.list_reponse_fausse)) > 0:
-        #
-        #     self.label2.set_markup("<span foreground='red' size='large'>Travail des fautes </span>")
-        #     self.question(table, self.list_reponse_fausse[-1])
-        #     self.list_reponse_fausse.pop()
 
         # Affiche les résultats
         else:
             GObject.source_remove(self.test1)
             GObject.source_remove(self.test2)
-            GObject.source_remove(self.time_out)
+            # GObject.source_remove(self.time_out)
             self.fin()
 
     def affiche_table_revision(self):
@@ -478,8 +501,13 @@ class Multiplication(Gtk.Window):
         self.window_table.show()
 
     def fin(self):
-        self.img = GdkPixbuf.Pixbuf.new_from_file('images-init.png')
+        # Sauvegarde des scores
+        sauvegarde = Statistiques()
+        print(sorted(self.dico_reponse.items()))
+        sauvegarde.write(self.dico_reponse)
 
+        # Efface les images
+        self.img = GdkPixbuf.Pixbuf.new_from_file(self.dir + 'images-init.png')
         self.q_image1.set_from_pixbuf(self.img)
         self.q_image2.set_from_pixbuf(self.img)
 
@@ -495,24 +523,24 @@ class Multiplication(Gtk.Window):
         self.bouton3.set_sensitive(False)
 
         if fautes == 0:
-            self.img = GdkPixbuf.Pixbuf.new_from_file('Cute-Hamster-1.jpg')
+            self.img = GdkPixbuf.Pixbuf.new_from_file(self.dir + 'Cute-Hamster-1.jpg')
             self.image_bravo.set_from_pixbuf(self.img)
             self.label_bravo.set_markup("<span foreground='green' size='x-large'><b>Bravo ! 0 faute </b></span>")
             self.window_bravo.show()
         elif fautes == 1:
-            self.img = GdkPixbuf.Pixbuf.new_from_file('marmotte.jpg')
+            self.img = GdkPixbuf.Pixbuf.new_from_file(self.dir + 'marmotte.jpg')
             self.image_bravo.set_from_pixbuf(self.img)
             self.label_bravo.set_markup("<span foreground='orange' size='x-large'>1 seule faute, c'est bien !</span>")
             self.window_bravo.show()
 
         elif fautes == 2:
-            self.img = GdkPixbuf.Pixbuf.new_from_file('mouche.png')
+            self.img = GdkPixbuf.Pixbuf.new_from_file(self.dir + 'mouche.png')
             self.image_bravo.set_from_pixbuf(self.img)
             self.label_bravo.set_markup("<span foreground='orange' size='x-large'>2 fautes, c'est moyen ...</span>")
             self.window_bravo.show()
 
         elif fautes == 3:
-            self.img = GdkPixbuf.Pixbuf.new_from_file('chameau.png')
+            self.img = GdkPixbuf.Pixbuf.new_from_file(self.dir + 'chameau.png')
             self.image_bravo.set_from_pixbuf(self.img)
             self.label_bravo.set_markup("<span foreground='orange' size='x-large'>3 fautes ...</span>")
             self.window_bravo.show()
