@@ -54,8 +54,12 @@ class Multiplication(Gtk.Window):
 
         self.angle1 = 0
         self.angle2 = 0
+        self.dir = self.getRootDirectory() + "/data/"
+        self.root_dir = self.getRootDirectory()
+        
 
-        self.gladefile = "fenetre.glade"
+
+        self.gladefile = self.root_dir + "fenetre.glade"
         self.builder = Gtk.Builder()
         self.builder.add_from_file(self.gladefile)
         self.builder.connect_signals(self)
@@ -139,7 +143,6 @@ class Multiplication(Gtk.Window):
         self.progressbar1 = self.builder.get_object("progressbar1")
         self.progressbar1.hide()
 
-        self.dir = self.getRootDirectory() + "/data/"
 
         # Gestion des images
         self.image0 = self.dir + 'images-0.png'
