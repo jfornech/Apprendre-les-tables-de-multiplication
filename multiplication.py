@@ -55,7 +55,7 @@ class Multiplication(Gtk.Window):
         self.angle1 = 0
         self.angle2 = 0
         self.dir = self.getRootDirectory() + "/data/"
-        self.root_dir = self.getRootDirectory()
+        self.root_dir = self.getRootDirectory() + "/"
         
 
 
@@ -65,7 +65,7 @@ class Multiplication(Gtk.Window):
         self.builder.connect_signals(self)
 
         self.cssProvider = Gtk.CssProvider()
-        self.cssProvider.load_from_path('style.css')
+        self.cssProvider.load_from_path(self.root_dir + 'style.css')
         self.screen = Gdk.Screen.get_default()
         self.styleContext = Gtk.StyleContext()
         self.styleContext.add_provider_for_screen(self.screen, self.cssProvider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
