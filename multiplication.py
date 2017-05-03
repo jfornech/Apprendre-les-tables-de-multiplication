@@ -337,13 +337,13 @@ class Multiplication(Gtk.Window):
         return result
 
     def verification(self, table, multiplicateur, reponse):
-        print(str(table) + " x " + str(multiplicateur) + " = " + str(reponse))
+        # print(str(table) + " x " + str(multiplicateur) + " = " + str(reponse))
         if table * multiplicateur == reponse:
             self.label1.set_text("OK")
             self.reponse_juste += 1
             self.list_multiplicateur.pop()
-            print("Juste")
-            print(self.list_multiplicateur)
+            # print("Juste")
+            #print(self.list_multiplicateur)
             random.shuffle(self.list_multiplicateur)  # mélange la liste
             return "OK"
 
@@ -360,9 +360,9 @@ class Multiplication(Gtk.Window):
             self.list_multiplicateur.append(multiplicateur)
             self.question_posee -= 1
 
-            print(self.list_multiplicateur)
+            #print(self.list_multiplicateur)
             random.shuffle(self.list_multiplicateur)  # mélange la liste
-            print("Faux")
+            #print("Faux")
             return "Faux"
 
     def reponse_temps_ecoule(self):
@@ -420,7 +420,7 @@ class Multiplication(Gtk.Window):
 
         data = self.progressbar1.get_fraction()
         fraction = (1 / 100) * tps
-        print("fraction : " + str(fraction))
+        #print("fraction : " + str(fraction))
 
         if q is True:
             if data < 1 and int(self.compteur_question) < int(self.nombre_de_question):
