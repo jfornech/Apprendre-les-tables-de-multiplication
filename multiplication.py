@@ -45,6 +45,7 @@ class Statistiques():
             if clef == self.list_stat[i]:
                 self.dico_stat[self.list_stat[i]] = value
 
+
     def update(self):
         self.write(dico=self.dico_stat)
 
@@ -55,6 +56,7 @@ class Statistiques():
         for cle, valeur in sorted(dico.items()):
             output.write("'{}';".format(valeur))
         output.write("\n")
+
 
 class TimerWindow:
     def __init__(self):
@@ -131,6 +133,7 @@ class Multiplication(Gtk.Window):
         self.test = int(self.combo_temps.get_active_text())
         self.tps_question = self.test * 5
         self.table = self.builder.get_object("comboboxtext1")
+
         self.bouton_lancer = self.builder.get_object("bouton_lancer")
         self.bouton_quitter = self.builder.get_object("bouton_quitter")
         self.bouton1 = self.builder.get_object("button_reponse1")
@@ -139,6 +142,9 @@ class Multiplication(Gtk.Window):
         self.bouton2.set_label("")
         self.bouton3 = self.builder.get_object("button_reponse3")
         self.bouton3.set_label("")
+        self.bouton4 = self.builder.get_object("button_reponse4")
+        self.bouton4.set_label("")
+
         self.label1 = self.builder.get_object("label1")
         self.label2 = self.builder.get_object("label2")
         self.label_bravo = self.builder.get_object("label_bravo")
@@ -312,6 +318,14 @@ class Multiplication(Gtk.Window):
         self.questionnaire(self.list_test_table[0])
         self.progressbar1.set_fraction(0.0)
 
+    def reponse4_clicked(self, button):
+        t = self.question_en_cours[0]
+        m = self.question_en_cours[1]
+        rep1 = button.get_label()
+        self.reponse(table=t, multiplicateur=m, reponse=rep1)
+        self.questionnaire(self.list_test_table[0])
+        self.progressbar1.set_fraction(0.0)
+
     def table_change(self, button):
         for a in self.table.get_active_text():
             self.list_test_table = []
@@ -426,24 +440,43 @@ class Multiplication(Gtk.Window):
 
         # Genére l'erreur la plus probable,
         # soit sur le multiplicateur soit sur la table (+/- 1)
-        lst = [1, -1, 0]  # (+/- 1)
-        erreur_table_ou_multiplicateur = [0, 1]  # soit sur le multiplicateur, soit sur la table
-        random.shuffle(erreur_table_ou_multiplicateur)  # mélange la liste
-        random.shuffle(lst)  # mélange la liste
+        # lst = [1, -1, 0]  # (+/- 1)
+        # erreur_table_ou_multiplicateur = [0, 1]  # soit sur le multiplicateur, soit sur la table
+        # random.shuffle(erreur_table_ou_multiplicateur)  # mélange la liste
+        # random.shuffle(lst)  # mélange la liste
+        #
+        #
+        #
+        # if erreur_table_ou_multiplicateur[0] == 0:
+        #     self.reponse1 = int(t) * (int(m) + lst[0])
+        #     self.reponse2 = int(t) * (int(m) + lst[1])
+        #     self.reponse3 = int(t) * (int(m) + lst[2])
+        #
+        # else:
+        #     self.reponse1 = int(m) * (int(t) + lst[0])
+        #     self.reponse2 = int(m) * (int(t) + lst[1])
+        #     self.reponse3 = int(m) * (int(t) + lst[2])
+        #
+        # self.bouton1.set_label(str(self.reponse1))
+        # self.bouton2.set_label(str(self.reponse2))
+        # self.bouton3.set_label(str(self.reponse3))
 
-        if erreur_table_ou_multiplicateur[0] == 0:
-            self.reponse1 = int(t) * (int(m) + lst[0])
-            self.reponse2 = int(t) * (int(m) + lst[1])
-            self.reponse3 = int(t) * (int(m) + lst[2])
+        ## DEBUT
+        ## test 4 réponse
+        ##
+        list_erreur = []
+        list_erreur.append(int(t) * ((int(m)) + 1))
+        list_erreur.append(int(t) * ((int(m)) - 1))
+        list_erreur.append(int(t) * (int(m)))
+        list_erreur.append(int(t) + (int(m)))
+        random.shuffle(list_erreur)
 
-        else:
-            self.reponse1 = int(m) * (int(t) + lst[0])
-            self.reponse2 = int(m) * (int(t) + lst[1])
-            self.reponse3 = int(m) * (int(t) + lst[2])
+        self.bouton1.set_label(str(list_erreur[0]))
+        self.bouton2.set_label(str(list_erreur[1]))
+        self.bouton3.set_label(str(list_erreur[2]))
+        self.bouton4.set_label(str(list_erreur[3]))
 
-        self.bouton1.set_label(str(self.reponse1))
-        self.bouton2.set_label(str(self.reponse2))
-        self.bouton3.set_label(str(self.reponse3))
+        ## FIN
 
     def on_timeout(self, q=True, tps=10):
         """
@@ -521,6 +554,7 @@ class Multiplication(Gtk.Window):
         self.bouton1.set_sensitive(False)
         self.bouton2.set_sensitive(False)
         self.bouton3.set_sensitive(False)
+        self.bouton4.set_sensitive(False)
 
         if fautes == 0:
             self.img = GdkPixbuf.Pixbuf.new_from_file(self.dir + 'Cute-Hamster-1.jpg')
@@ -548,7 +582,7 @@ class Multiplication(Gtk.Window):
         else:
             self.q_image1.clear()
             self.q_image2.clear()
-            self.label1.set_markup("<span foreground='red' size='x-large'>" + str(fautes) + " fautes </span>")
+            #self.label1.set_markup("<span foreground='red' size='x-large'>" + str(fautes) + " fautes </span>")
 
         self.bouton1.hide()
         self.bouton2.hide()
@@ -563,7 +597,7 @@ class Multiplication(Gtk.Window):
         self.list_multiplicateur = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
     def move1(self):
-        self.centre = 100
+        self.centre = 75
         self.rayon = 65
 
         self.x = self.centre + (math.cos(self.angle1) * self.rayon)
@@ -579,7 +613,7 @@ class Multiplication(Gtk.Window):
         return self.x
 
     def move2(self):
-        self.centre = 100
+        self.centre = 75
         self.rayon = -65
 
         self.x = self.centre + (math.cos(self.angle2) * self.rayon)
@@ -602,5 +636,6 @@ def main():
 
 if __name__ == '__main__':
     test = Multiplication()
+    #stat = Statistiques.open(test)
 
     main()
