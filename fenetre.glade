@@ -48,8 +48,8 @@ Author: Jean-François Ornech
               <object class="GtkSeparator" id="separator1">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_top">10</property>
-                <property name="margin_bottom">10</property>
+                <property name="margin_top">1</property>
+                <property name="margin_bottom">4</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
@@ -68,7 +68,7 @@ Author: Jean-François Ornech
                     <property name="can_focus">False</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
-                    <property name="border_width">3</property>
+                    <property name="border_width">10</property>
                     <child>
                       <object class="GtkImage" id="image1">
                         <property name="width_request">100</property>
@@ -97,17 +97,21 @@ Author: Jean-François Ornech
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">0</property>
+                    <property name="height">2</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkSeparator" id="separator2">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_left">5</property>
+                    <property name="margin_right">5</property>
                     <property name="orientation">vertical</property>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
                     <property name="top_attach">0</property>
+                    <property name="height">2</property>
                   </packing>
                 </child>
                 <child>
@@ -137,9 +141,9 @@ Author: Jean-François Ornech
                       <object class="GtkComboBoxText" id="comboboxtext1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="valign">start</property>
                         <property name="margin_left">5</property>
                         <property name="margin_right">5</property>
-                        <property name="margin_bottom">5</property>
                         <property name="active">0</property>
                         <items>
                           <item translatable="yes">Table de 1</item>
@@ -156,7 +160,7 @@ Author: Jean-François Ornech
                       </object>
                       <packing>
                         <property name="expand">False</property>
-                        <property name="fill">True</property>
+                        <property name="fill">False</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
@@ -245,6 +249,7 @@ Author: Jean-François Ornech
                   <packing>
                     <property name="left_attach">2</property>
                     <property name="top_attach">0</property>
+                    <property name="height">2</property>
                   </packing>
                 </child>
               </object>
@@ -276,21 +281,21 @@ Author: Jean-François Ornech
           <object class="GtkGrid" id="grid2">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="margin_left">10</property>
+            <property name="margin_right">10</property>
+            <property name="margin_bottom">10</property>
             <child>
               <object class="GtkButton" id="button_reponse1">
                 <property name="label" translatable="yes">button</property>
                 <property name="name">button_reponse1</property>
-                <property name="width_request">75</property>
-                <property name="height_request">75</property>
+                <property name="width_request">80</property>
+                <property name="height_request">80</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="halign">end</property>
-                <property name="valign">start</property>
-                <property name="margin_left">10</property>
-                <property name="margin_right">10</property>
-                <property name="margin_top">10</property>
-                <property name="margin_bottom">10</property>
+                <property name="halign">center</property>
+                <property name="margin_left">3</property>
+                <property name="margin_right">3</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
                 <signal name="clicked" handler="reponse1_clicked" swapped="no"/>
@@ -304,15 +309,15 @@ Author: Jean-François Ornech
               <object class="GtkButton" id="button_reponse2">
                 <property name="label" translatable="yes">button</property>
                 <property name="name">button_reponse2</property>
-                <property name="width_request">75</property>
-                <property name="height_request">75</property>
+                <property name="width_request">80</property>
+                <property name="height_request">80</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="halign">center</property>
                 <property name="valign">start</property>
-                <property name="margin_top">10</property>
-                <property name="margin_bottom">10</property>
+                <property name="margin_left">3</property>
+                <property name="margin_right">3</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
                 <signal name="clicked" handler="reponse2_clicked" swapped="no"/>
@@ -326,21 +331,43 @@ Author: Jean-François Ornech
               <object class="GtkButton" id="button_reponse3">
                 <property name="label" translatable="yes">button</property>
                 <property name="name">button_reponse3</property>
-                <property name="width_request">75</property>
-                <property name="height_request">75</property>
+                <property name="width_request">80</property>
+                <property name="height_request">80</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <property name="halign">start</property>
+                <property name="halign">center</property>
                 <property name="valign">start</property>
-                <property name="margin_top">10</property>
-                <property name="margin_bottom">10</property>
+                <property name="margin_left">3</property>
+                <property name="margin_right">3</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
                 <signal name="clicked" handler="reponse3_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">2</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="button_reponse4">
+                <property name="label" translatable="yes">button</property>
+                <property name="name">button_reponse3</property>
+                <property name="width_request">80</property>
+                <property name="height_request">80</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="halign">center</property>
+                <property name="valign">start</property>
+                <property name="margin_left">3</property>
+                <property name="margin_right">3</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <signal name="clicked" handler="reponse4_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="left_attach">3</property>
                 <property name="top_attach">0</property>
               </packing>
             </child>
