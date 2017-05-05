@@ -30,15 +30,12 @@ class Statistiques():
 
     def open(self):
         input_file = open(self.file, "r")
+        # print (input_file)
         t = input_file.read()
-        a = t.split("\n")
-        dico_outout = {}
-        for b in range(0, len(a)):
-            tableau = a[b].split(';')
-            cle = tableau[0]
-            valeur = tableau[1]
-            dico_outout[cle] = valeur
-        return (dico_outout)
+        # print(t)
+        a = t.splitlines()
+        input_file.close()
+        return a
 
     def get_values(self, clef, value):
         for i in range(0, len(self.list_stat)):
