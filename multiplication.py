@@ -29,6 +29,10 @@ class Statistiques():
             self.dico_stat[self.list_stat[clef]] = ""
 
     def open(self):
+        '''
+        Ouvre le fichier cvs
+        :return:
+        '''
         input_file = open(self.file, "r")
         # print (input_file)
         t = input_file.read()
